@@ -1,0 +1,41 @@
+body{
+  display :flex;
+  flex-flow :column;
+  height :100%;
+}
+#header{
+  position: fixed;
+  background-color :IndianRed;
+  height :100px;
+  text-align :center;
+  padding :25px;
+  color :white;
+  z-index: 2
+}
+#main{
+  margin-top: 100px;
+  background-color :#404040;
+  flex-grow :1;
+}
+.pojedyncze_pytanie{
+  color:white;
+  height:300px;
+  text-align:center;
+  padding:20px;
+  font-size:20px;
+  font-family:"Arial Black";
+}
+.pojedyncze_pytanie:hover{
+  background-color:black;
+}
+.btn-primary{
+  background-color: #0275d8;
+  min-width:20%;
+  word-wrap:break-word;
+}
+.lista_odpowiedzi{
+    width:100%;
+    margin-left:-40px;
+    margin-top:30px;
+
+}

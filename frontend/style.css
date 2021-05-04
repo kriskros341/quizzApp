@@ -1,0 +1,132 @@
+body{
+  display :flex;
+  flex-flow :column;
+  height :100%;
+}
+#header_index{
+  position: fixed;
+  background-color :IndianRed;
+  height :140px;
+  padding :25px;
+  color :white;
+  z-index: 2;
+  text-align: center;
+  border-bottom: black solid;
+}
+#header{
+  position: fixed;
+  background-color :IndianRed;
+  height :115px;
+  padding :25px;
+  color :white;
+  z-index: 2;
+  text-align: center;
+  border-bottom: black solid;
+}
+
+#main_index{
+  margin-top: 140px;
+  background-color :#404040;
+  flex-grow :1;
+}
+#main{
+  margin-top: 115px;
+  background-color :#404040;
+  flex-grow :1;
+}
+.flex-col{
+  display: flex;
+  flex-direction: column;
+}
+.flex-row{
+  display: flex;
+  flex-direction: row;
+}
+.form-div{
+  margin: 10px;
+}
+.table{
+  top: 20%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 450px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+.wyslij{
+  width:100%;
+  height:40px;
+}
+.acc_form_label{
+  text-align: center;
+  background-color: white;
+  width:40%;
+}
+.acc_form_input{
+  margin-top: -10px;
+  background-color: white;
+  width:40%;
+  height:40px;
+}
+.acc_form_button{
+  margin-top: -10px;
+  background-color: white;
+  width:40%;
+  height:40px;
+}
+.logo{
+  max-width: 120px;
+  margin-left: -2em;
+  margin-top: -1em;
+}
+.progress {
+  margin-top: 30px;
+}
+.progress-bar{
+  width:0%;
+}
+.pojedyncze_pytanie{
+  color:white;
+  min-height:300px;
+  text-align:center;
+  padding:20px;
+  font-size:20px;
+  font-family:"Arial Black";
+}
+.pojedyncze_pytanie:hover{
+  background-color:DimGray;
+  background-blend-mode: color;
+}
+.btn-primary{
+  background-color: #0275d8;
+  min-width:20%;
+  word-wrap:break-word;
+}
+.btn-primary:hover{
+  background-color: IndianRed;
+}
+.lista_odpowiedzi{
+    width:100%;
+    margin-left:-40px;
+    margin-top:30px;
+}
+p{
+}
+.code-showcase{
+  margin-top: 50px;
+  min-width:100%;
+  min-height:50%;
+  display:none;
+}
+.ui-tooltip {
+  width: 100px;
+  width: 120px;
+background-color: grey;
+color: #fff;
+text-align: center;
+border-radius: 6px;
+padding: 5px 0;
+}

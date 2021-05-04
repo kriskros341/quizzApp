@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <script>
+    $.ajaxSetup({
+      contentType : "application/json;"
+    });
+    function test_file(data){
+      var formData = new FormData(data)
+      console.log(data['file'].files)
+      $.ajax({
+        url: 'http://127.0.0.1:5000/upload_file',
+        type: 'post',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(response){console.log(response)}
+      })
+    }
+
+    function recovery(data){
+      //var formData = new FormData(data)
+      json = {'nickname':data['nickname'].value,'email':data['email'].value}
+      //$.post("http://127.0.0.1:5000/test",data['file'].files ,function(data,status){console.log(status)}) <-- Nie działa : c
+      $.ajax({
+        url: 'http://localhost:8005/recovery',
+        type: 'post',
+        data: JSON.stringify(json),
+        success: function(response){console.log(response)}
+      })}
+
+    </script>
+    <form onsubmit="return false;" enctype="">
+      <input name="file" id="file" type="file"/>
+      <button onclick="test_file(this.form)" type="submit">submit</button>
+    </form>
+<br><br>
+    <form onsubmit="return false;" enctype="">
+      <input name="nickname" id="nickname" type="text"/>
+      <input name="email" id="email" type="email"/>
+      <button onclick="recovery(this.form)" type="submit">submit</button>
+    </form>
+<img src="http://localhost:8005/get_file/images.png"
+  </body>
+</html>

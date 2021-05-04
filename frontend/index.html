@@ -1,0 +1,133 @@
+<html lang="pl">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <title>QUIZ EE.09</title>
+</head>
+<body>
+<div class="container-fluid" id="header_index">
+  <div style="position: fixed;"><img class="logo" src="images.png" class="logo"></div>
+  <a href="index.html" id="btn_1" class="btn btn-outline-danger text-white bg-danger btn-lg">START</a>
+  <a href="dodaj_odpowiedz.html" id="btn_1" class="btn btn-outline-danger text-white bg-danger btn-lg">DODAJ ODPOWIEDŹ</a>
+  <a href="logowanie.html" id="btn_1" class="btn btn-outline-danger text-white bg-danger btn-lg">KONTO</a>
+  <div id="user" style="text-align:right;margin-top:-45px"></div>
+  <div class="progress" style="height:20px;margin-top:45px">
+    <div class="progress-bar"></div>
+  </div>
+</div>
+<script>
+  if ('nickname' in sessionStorage){
+    document.getElementById('user').innerHTML = 'ZALOGOWANO JAKO: '+sessionStorage['nickname']
+  } else {
+    document.getElementById('user').innerHTML = "NIE ZALOGOWANO!"
+  }
+</script>
+<div class="container-fluid" id="main_index">
+  <script>
+  var progress_bar = 0
+  $.ajaxSetup({
+    contentType : "application/json;"
+  });
+var x = 7
+function_1(x)
+var btn_1 = document.getElementById('btn_1');
+
+  function function_1(x){
+
+    $.get("http://localhost:8005/get_questions/"+x).done(function(result,status){
+    result['time'] = Date.now()
+    data = result['pytania']
+    $(".pojedyncze_pytanie").remove()
+    var index_pytania = 0
+    var index_odpowiedzi = 0
+    var odpowiedziane_pytania = []
+    var wybrane_odpowiedzi = {}
+    data.forEach(function(xqz){
+
+      var div_1 = document.createElement("DIV");
+      div_1.setAttribute("id","pytanie"+index_pytania);
+      div_1.setAttribute("class", "pojedyncze_pytanie");
+      document.getElementById('main_index').appendChild(div_1);
+      div_1.innerHTML = "<p>"+xqz['treść']+"</p>"+"<br>";
+
+      var lista_odpowiedzi = document.createElement("UL");
+      lista_odpowiedzi.setAttribute("id","lista"+index_pytania);
+      lista_odpowiedzi.setAttribute("class","lista_odpowiedzi btn-group");
+      document.getElementById('pytanie'+index_pytania).appendChild(lista_odpowiedzi);
+
+      index_odpowiedzi = 0
+      xqz['odpowiedzi'].forEach(function(tresc_odpowiedzi){
+        var odpowiedz = document.createElement("LI");
+        odpowiedz.setAttribute("class","odpowiedz btn btn-primary")
+        odpowiedz.setAttribute("id","odpowiedz_"+index_odpowiedzi+"_pytanie_"+index_pytania)
+        document.getElementById('lista'+index_pytania).appendChild(odpowiedz);
+
+        $("#odpowiedz_"+index_odpowiedzi+"_pytanie_"+index_pytania).click(function(){ // wymyślenie tego cuda trochę nam zajęło ^^
+
+
+          console.log("wybrano odpowiedz "+$( this ).attr('id')[10]+" na pytanie "+$( this ).attr('id').slice(20))
+          temp = $( this ).attr('id').slice(20)
+          if (!(temp+"a" in odpowiedziane_pytania)){
+            odpowiedziane_pytania.push(temp+"a")
+            progress_bar = Math.round((odpowiedziane_pytania.length/data.length) * 100)+"%"
+            wybrane_odpowiedzi[$( this ).attr('id').slice(20)] = $( this ).attr('id')[10]
+            $(".progress-bar").html(progress_bar)
+            $(".progress-bar").css("width",progress_bar)
+            if(odpowiedziane_pytania.length == data.length){
+              get_result(wybrane_odpowiedzi, result)
+            }
+          } else {
+            console.log("Już wybrano odpowiedź na to pytanie...")
+            console.log("Już wybrano odpowiedź na "+odpowiedziane_pytania)
+          }
+          $("#pytanie"+this['id'].slice(20)).fadeOut(100)
+        })
+
+        index_odpowiedzi++;
+        odpowiedz.innerHTML = tresc_odpowiedzi;
+      })
+      if (xqz['picture'] != undefined && xqz['picture'] != ""){
+
+        var pic = document.createElement("IMG")
+        pic.setAttribute("src","http://localhost:8005/get_file/"+xqz['picture'])
+        pic.setAttribute("alt","")
+        document.getElementById('pytanie'+index_pytania).appendChild(pic);
+      }
+      index_pytania++;
+    })}
+  )}
+  function get_result(odpowiedzi, data){
+    var result = {}
+    result['odpowiedzi'] = {}
+    for (var element in odpowiedzi){
+      result['odpowiedzi'][data['pytania'][element]['index']] = odpowiedzi[element] == data['pytania'][element]['popr_odp_index']
+    }
+    result['started'] = data['time']
+    result['finished'] = Date.now()
+    if ('nickname' in sessionStorage){
+      result['nickname'] = sessionStorage['nickname']
+    }
+    $.post("http://localhost:8005/quizz_result",JSON.stringify(result), function(data,status){
+      var odp = Math.round((data['poprawne'].length/x)*100)
+      document.getElementById('popr_odp').innerHTML=data['poprawne'].length+"/"+x+"("+odp+"%)"
+      document.getElementById('czas').innerHTML=Math.round(data['time'])+" sekund"
+      $("#wynik").fadeIn()
+      //$("#wynik").css('display','block')
+
+    })
+  }
+  </script>
+
+  <div class="" id="wynik" style="display:none">
+    <table class="table table-dark table-hover">
+      <tr class="thead-light" style="text-align:center"><th colspan="2">TABELA WYNIKÓW</th></tr>
+      <tr><td>POPRAWNE ODPOWIEDZI: </td><td id="popr_odp"></td></tr>
+      <tr><td>CZAS: </td><td id="czas"></td></tr>
+      </table>
+  </div>
+
+</div>
+</body>
+</html>
